@@ -11,8 +11,8 @@ import java.util.concurrent.TimeUnit;
  */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-@Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
-@Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 8, time = 1, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 8, time = 2, timeUnit = TimeUnit.SECONDS)
 @Fork(value = 1,
 //    jvmArgs = "-Xms2048m"
         jvmArgs = {"-Xms2048m", "-XX:+UseSuperWord"}
