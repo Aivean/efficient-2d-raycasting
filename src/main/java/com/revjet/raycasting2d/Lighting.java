@@ -92,7 +92,7 @@ public class Lighting {
     }
 
     private void applyLight(T t, int x, int y, double td) {
-        light[x][y] += Math.max(Math.min(t.b + t.l, x + 1) - Math.max(t.b, x), 0) * t.i * td;
+        light[x][y] += max(min(t.b + t.l, x + 1) - max(t.b, x), 0) * t.i * td;
     }
 
     private void cutInterval(T t, int x) {
@@ -114,18 +114,6 @@ public class Lighting {
         int i = 0;
         int j = 0;
         int n = 0;
-//
-//        while (i < tmp2IntN || j < tmpNewIntN) {
-//            if (i < tmp2IntN && (j >= tmpNewIntN || tmp2[i].d || tmp2[i].b < tmpNew[j].b)) {
-//                if (!tmp2[i].d) {
-//                    n = merge1(tmp2[i], n);
-//                }
-//                i++;
-//            } else if (j < tmpNewIntN && (i >= tmp2IntN || tmp2[i].b >= tmpNew[j].b)) {
-//                n = merge1(tmpNew[j], n);
-//                j++;
-//            }
-//        }
 
         j = 0;
         T tj;
@@ -149,8 +137,8 @@ public class Lighting {
     private int merge1(T t, int n) {
         if (n > 0) {
             T t2 = tmp[n - 1];
-            double b = Math.min(t.b, t2.b);
-            double e = Math.max(t.b + t.l, t2.b + t2.l);
+            double b = min(t.b, t2.b);
+            double e = max(t.b + t.l, t2.b + t2.l);
             double l = e - b;
             if (l <= 1) {
                 double i = t.i * t.l + t2.i * t2.l;
@@ -187,5 +175,13 @@ public class Lighting {
 
     double getLight(int x, int y) {
         return light[x][y];
+    }
+
+    private static double max(double a, double b) {
+        return a > b ? a : b;
+    }
+
+    private static double min(double a, double b) {
+        return a < b ? a : b;
     }
 }
