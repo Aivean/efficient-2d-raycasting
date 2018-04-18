@@ -47,6 +47,8 @@ public class Lighting {
 
             for (y = 0; y < h; y++) {
                 tmpN = merge();
+                int[] objectsY = objects[y];
+                double[] lightY = light[y];
 
                 for (int i = 0; i < tmpN; i++) {
                     T t = tmp[i];
@@ -65,19 +67,20 @@ public class Lighting {
                     if (t.d) continue;
                     int fb = (int) (t.b);
                     int fe = fb + 1;
-                    applyLight(t, fb, y, td);
-                    applyLight(t, fe, y, td);
-                    if (objects[fb][y] == 2) {
+                    lightY[fb] += applyLight(t, fb, y, td);
+                    lightY[fb] += applyLight(t, fe, y, td);
+
+                    if (objectsY[fb] == 2) {
                         cutInterval(t, fb);
                     }
-                    if (objects[fe][y] == 2) {
+                    if (objectsY[fe] == 2) {
                         cutInterval(t, fe);
                     }
                 }
                 if (y < h / 2 || a % 2 == 0) {
                     for (x = 0; x < w; x++) {
-                        if (objects[x][y] == 1) { // light
-                            light[x][y] += startIntensity;
+                        if (objectsY[x] == 1) { // light
+                            lightY[x] += startIntensity;
                             tmpNew[tmpNewIntN++] = new T(x, (y < h / 2 ? startIntensity : startIntensity * 2));
                         }
                     }
@@ -91,8 +94,8 @@ public class Lighting {
         }
     }
 
-    private void applyLight(T t, int x, int y, double td) {
-        light[x][y] += max(min(t.b + t.l, x + 1) - max(t.b, x), 0) * t.i * td;
+    private double applyLight(T t, int x, int y, double td) {
+        return max(min(t.b + t.l, x + 1) - max(t.b, x), 0) * t.i * td;
     }
 
     private void cutInterval(T t, int x) {

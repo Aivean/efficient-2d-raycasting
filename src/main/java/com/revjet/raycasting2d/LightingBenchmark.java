@@ -44,15 +44,10 @@ public class LightingBenchmark {
     /*
     Best result:
 
-    Result "testSimd":
-      98.504 ±(99.9%) 13.158 ms/op [Average]
-      (min, avg, max) = (95.557, 98.504, 104.421), stdev = 3.417
-      CI (99.9%): [85.346, 111.663] (assumes normal distribution)
+      76.020 ±(99.9%) 13.015 ms/op [Average]
+  (min, avg, max) = (69.478, 76.020, 91.642), stdev = 6.807
+  CI (99.9%): [63.005, 89.035] (assumes normal distribution)
 
 
-    Result "testSimd":
-      84.876 ±(99.9%) 12.373 ms/op [Average]
-      (min, avg, max) = (80.211, 84.876, 88.498), stdev = 3.213
-      CI (99.9%): [72.503, 97.249] (assumes normal distribution)
     */
 }

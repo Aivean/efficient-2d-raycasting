@@ -57,13 +57,13 @@ public class LightingTest {
         Lighting l = new Lighting(w, h);
 
         int[][] objects = new int[w][h];
-        objects[w / 2][0] = 1;
-        objects[w / 3][0] = 1;
-        objects[w * 2 / 3][0] = 1;
+        objects[0][w / 2]     = 1;
+        objects[0][w / 3]     = 1;
+        objects[0][w * 2 / 3] = 1;
 
-        objects[w / 2][h / 2] = 2;
-        objects[w / 2][h / 2 + 1] = 2;
-        objects[w / 2][h / 2 + 2] = 2;
+        objects[h / 2]    [w / 2]  = 2;
+        objects[h / 2 + 1][w / 2] = 2;
+        objects[h / 2 + 2][w / 2] = 2;
 
         l.recalculateLighting(objects, 1.0 / w / 10);
 
