@@ -141,10 +141,9 @@ public class Lighting {
             double e = max(t.b + t.l, t2.b + t2.l);
             double l = e - b;
             if (l <= 1) {
-                double i = t.i * t.l + t2.i * t2.l;
                 t2.b = b;
                 t2.l = l;
-                t2.i = i / l;
+                t2.i = (t.i * t.l + t2.i * t2.l) / l;
                 return n;
             } else if (l <= 2 && t.b - t2.b - t2.l <= 0.5) {
                 double l1 = l / 2;
