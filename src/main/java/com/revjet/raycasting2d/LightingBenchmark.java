@@ -54,5 +54,10 @@ public class LightingBenchmark {
       84.876 ±(99.9%) 12.373 ms/op [Average]
       (min, avg, max) = (80.211, 84.876, 88.498), stdev = 3.213
       CI (99.9%): [72.503, 97.249] (assumes normal distribution)
+
+    77.263 ±(99.9%) 3.022 ms/op [Average]
+      (min, avg, max) = (75.065, 77.263, 79.338), stdev = 1.581
+      CI (99.9%): [74.241, 80.285] (assumes normal distribution)
+
     */
 }
