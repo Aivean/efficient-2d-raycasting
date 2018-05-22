@@ -17,6 +17,7 @@ public class Lighting {
     int tmp2IntN = 0;
     private int tmpNewIntN;
 
+    boolean lightPresent[];
 
     public Lighting(int w, int h) {
         this.w = w;
@@ -25,6 +26,8 @@ public class Lighting {
         tmp = new T[w * 3];
         tmp2 = new T[w * 3];
         tmpNew = new T[w];
+
+        lightPresent = new boolean[h];
     }
 
     void recalculateLighting(int[][] objects, double startIntensity) {
@@ -34,6 +37,8 @@ public class Lighting {
         for (x = 0; x < w; x++) {
             Arrays.fill(light[x], 0);
         }
+        boolean firstPass = true;
+        Arrays.fill(lightPresent, false);
 
         int raysN = w * 2;
         for (int a = -raysN / 2; a < raysN / 2; a++) { // slope
@@ -74,10 +79,11 @@ public class Lighting {
                         cutInterval(t, fe);
                     }
                 }
-                if (y < h / 2 || a % 2 == 0) {
+                if ((firstPass || lightPresent[y]) && (y < h / 2 || a % 2 == 0)) {
                     for (x = 0; x < w; x++) {
                         if (objects[x][y] == 1) { // light
                             light[x][y] += startIntensity;
+                            lightPresent[y] = true;
                             tmpNew[tmpNewIntN++] = new T(x, (y < h / 2 ? startIntensity : startIntensity * 2));
                         }
                     }
@@ -88,6 +94,7 @@ public class Lighting {
                 tmp2 = tmpTmp;
                 tmp2IntN = tmpN;
             }
+            firstPass = false;
         }
     }
 

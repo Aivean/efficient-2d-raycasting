@@ -33,6 +33,8 @@ public class LightingBenchmark {
         for (int x = 0; x < w; x++) {
             Arrays.fill(objects[x], 1);
         }
+//        objects[w / 2][h / 2] = 1;
+
         l = new Lighting(w, h);
     }
 
