@@ -38,7 +38,7 @@ public class LightingBenchmark {
 
     @Benchmark
     public void testSimd() {
-        l.recalculateLighting(objects, 1.0);
+        l.recalculateLighting(objects, 1F);
     }
 
     /*

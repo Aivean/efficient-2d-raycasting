@@ -9,7 +9,7 @@ import java.util.Arrays;
 public class Lighting {
 
     final int w, h;
-    private final double[][] light;
+    private final float[][] light;
     private T[] tmp;
     private T[] tmp2;
     private T[] tmpNew;
@@ -21,7 +21,7 @@ public class Lighting {
     public Lighting(int w, int h) {
         this.w = w;
         this.h = h;
-        light = new double[w][h];
+        light = new float[w][h];
         tmp = new T[w * 3];
         tmp2 = new T[w * 3];
         tmpNew = new T[w];
@@ -37,7 +37,7 @@ public class Lighting {
         }
     }
 
-    void recalculateLighting(int[][] objects, double startIntensity) {
+    void recalculateLighting(int[][] objects, float startIntensity) {
         int x, y;
 
         /* cleaning lighting */
@@ -52,13 +52,13 @@ public class Lighting {
             tmpNewIntN = 0; // clear tmpNew
 
             double alpha = Math.PI / 4 * (2.0 * a / raysN);
-            double slp = Math.tan(alpha);
-            double td = Math.sqrt(slp * slp + 1);
+            float slp = (float) Math.tan(alpha);
+            float td = (float) Math.sqrt(slp * slp + 1);
 
             for (y = 0; y < h; y++) {
                 tmpN = merge();
                 int[] objectsY = objects[y];
-                double[] lightY = light[y];
+                float[] lightY = light[y];
 
                 for (int i = 0; i < tmpN; i++) {
                     T t = tmp[i];
@@ -107,17 +107,17 @@ public class Lighting {
         }
     }
 
-    private double applyLight(T t, int x, int y, double td) {
+    private float applyLight(T t, int x, int y, float td) {
         return max(min(t.b + t.l, x + 1) - max(t.b, x), 0) * t.i * td;
     }
 
     private void cutInterval(T t, int x) {
-        double e = t.b + t.l;
+        float e = t.b + t.l;
         if (e <= x + 1 && e > x) {
             t.l = x - t.b;
         }
         if (t.b >= x && t.b < x + 1) {
-            double b = x + 1;
+            float b = x + 1;
             t.l -= b - t.b;
             t.b = b;
         }
@@ -153,17 +153,17 @@ public class Lighting {
     private int merge1(T t, int n) {
         if (n > 0) {
             T t2 = tmp[n - 1];
-            double b = min(t.b, t2.b);
-            double e = max(t.b + t.l, t2.b + t2.l);
-            double l = e - b;
+            float b = min(t.b, t2.b);
+            float e = max(t.b + t.l, t2.b + t2.l);
+            float l = e - b;
             if (l <= 1) {
                 t2.b = b;
                 t2.l = l;
                 t2.i = (t.i * t.l + t2.i * t2.l) / l;
                 return n;
             } else if (l < 2 && t.b - t2.b - t2.l <= 0.5) {
-                double l1 = l / 2;
-                double i = (t2.i * t2.l + t.i * t.l) / l;
+                float l1 = l / 2;
+                float i = (t2.i * t2.l + t.i * t.l) / l;
                 t2.b = b;
                 t2.l = l1;
                 t2.i = i;
@@ -178,16 +178,16 @@ public class Lighting {
     }
 
     private static class T {
-        double b, i, l;
+        float b, i, l;
         boolean d;
 
-        public T(double b, double i) {
+        public T(float b, float i) {
             this.b = b;
             this.l = 1;
             this.i = i;
         }
 
-        public void set(double b, double i) {
+        public void set(float b, float i) {
             this.b = b;
             this.l = 1;
             this.i = i;
@@ -202,15 +202,15 @@ public class Lighting {
         }
     }
 
-    double getLight(int x, int y) {
+    float getLight(int x, int y) {
         return light[x][y];
     }
 
-    private static double max(double a, double b) {
+    private static float max(float a, float b) {
         return a > b ? a : b;
     }
 
-    private static double min(double a, double b) {
+    private static float min(float a, float b) {
         return a < b ? a : b;
     }
 }

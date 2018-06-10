@@ -24,7 +24,7 @@ public class LightingTest {
                 {0, 0, 0}
         };
 
-        l.recalculateLighting(objects, 1.0 / 3);
+        l.recalculateLighting(objects, 1F / 3);
 
         for (int y = 0; y < l.h; y++) {
             for (int x = 0; x < l.w; x++) {
@@ -65,7 +65,7 @@ public class LightingTest {
         objects[h / 2 + 1][w / 2] = 2;
         objects[h / 2 + 2][w / 2] = 2;
 
-        l.recalculateLighting(objects, 1.0 / w / 10);
+        l.recalculateLighting(objects, 1F / w / 10);
 
         BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 
