@@ -25,6 +25,16 @@ public class Lighting {
         tmp = new T[w * 3];
         tmp2 = new T[w * 3];
         tmpNew = new T[w];
+
+        initTArr(tmp);
+        initTArr(tmp2);
+        initTArr(tmpNew);
+    }
+
+    private void initTArr(T[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = new T(0, 0);
+        }
     }
 
     void recalculateLighting(int[][] objects, double startIntensity) {
@@ -82,6 +92,9 @@ public class Lighting {
                         if (objectsY[x] == 1) { // light
                             lightY[x] += startIntensity;
                             tmpNew[tmpNewIntN++] = new T(x, (y < h / 2 ? startIntensity : startIntensity * 2));
+                            light[x][y] += startIntensity;
+//                            tmpNew[tmpNewIntN++] = new T(x, (y < h / 2 ? startIntensity : startIntensity * 2));
+                            tmpNew[tmpNewIntN++].set(x, (y < h / 2 ? startIntensity : startIntensity * 2));
                         }
                     }
                 }
@@ -160,7 +173,7 @@ public class Lighting {
                 t.i = i;
             }
         }
-        tmp[n++] = t;
+        tmp[n++].setFrom(t);
         return n;
     }
 
@@ -172,6 +185,20 @@ public class Lighting {
             this.b = b;
             this.l = 1;
             this.i = i;
+        }
+
+        public void set(double b, double i) {
+            this.b = b;
+            this.l = 1;
+            this.i = i;
+            this.d = false;
+        }
+
+        public void setFrom(T other) {
+            this.b = other.b;
+            this.i = other.i;
+            this.l = other.l;
+            this.d = other.d;
         }
     }
 
