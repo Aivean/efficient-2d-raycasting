@@ -91,8 +91,8 @@ public class Lighting {
                     for (x = 0; x < w; x++) {
                         if (objectsY[x] == 1) { // light
                             lightY[x] += startIntensity;
-                            tmpNew[tmpNewIntN++] = new T(x, (y < h / 2 ? startIntensity : startIntensity * 2));
-                            light[x][y] += startIntensity;
+//                            tmpNew[tmpNewIntN++] = new T(x, (y < h / 2 ? startIntensity : startIntensity * 2));
+                            lightY[x] += startIntensity;
 //                            tmpNew[tmpNewIntN++] = new T(x, (y < h / 2 ? startIntensity : startIntensity * 2));
                             tmpNew[tmpNewIntN++].set(x, (y < h / 2 ? startIntensity : startIntensity * 2));
                         }
