@@ -9,12 +9,12 @@ import java.util.Arrays;
 public class Lighting {
 
     final int w, h;
-    final double[][] light;
-    T[] tmp;
-    T[] tmp2;
-    T[] tmpNew;
+    private final double[][] light;
+    private T[] tmp;
+    private T[] tmp2;
+    private T[] tmpNew;
 
-    int tmp2IntN = 0;
+    private int tmp2IntN = 0;
     private int tmpNewIntN;
 
 
@@ -161,7 +161,7 @@ public class Lighting {
                 t2.l = l;
                 t2.i = (t.i * t.l + t2.i * t2.l) / l;
                 return n;
-            } else if (l <= 2 && t.b - t2.b - t2.l <= 0.5) {
+            } else if (l < 2 && t.b - t2.b - t2.l <= 0.5) {
                 double l1 = l / 2;
                 double i = (t2.i * t2.l + t.i * t.l) / l;
                 t2.b = b;

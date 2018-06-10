@@ -71,7 +71,7 @@ public class LightingTest {
 
         for (int y = 0; y < l.h; y++) {
             for (int x = 0; x < l.w; x++) {
-                double brightness = Math.min(1, l.light[x][y] * 50 + 0.01);
+                double brightness = Math.min(1, l.getLight(x,y) * 50 + 0.01);
                 int comp = (int) (0xff * brightness);
                 int rgb = (((comp << 8) | comp) << 8) | comp;
                 bi.setRGB(x, y, rgb);
