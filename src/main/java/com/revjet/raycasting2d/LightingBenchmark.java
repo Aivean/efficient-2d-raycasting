@@ -1,6 +1,13 @@
 package com.revjet.raycasting2d;
 
 import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.profile.LinuxPerfAsmProfiler;
+import org.openjdk.jmh.profile.LinuxPerfNormProfiler;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.openjdk.jmh.runner.options.VerboseMode;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -15,7 +22,9 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 8, time = 2, timeUnit = TimeUnit.SECONDS)
 @Fork(value = 1,
 //    jvmArgs = "-Xms2048m"
-        jvmArgs = {"-Xms2048m", "-XX:+UseSuperWord"}
+        jvmArgs = {"-Xms2048m", "-XX:+UseSuperWord", "-XX:+UnlockDiagnosticVMOptions"
+//                , "-XX:+PrintAssembly", "-XX:+PrintNMethods"
+}
 //    jvmArgs = {"-Xms2048m", "-XX:+UnlockDiagnosticVMOptions", "-XX:+TraceClassLoading", "-XX:+LogCompilation"}
 )
 @State(Scope.Thread)
@@ -37,8 +46,21 @@ public class LightingBenchmark {
     }
 
     @Benchmark
-    public void testSimd() {
+    public void testLighting() {
         l.recalculateLighting(objects, 1F);
+    }
+
+
+    public static void main(String[] args) throws RunnerException {
+        Options opt = new OptionsBuilder()
+                .include(".*" + LightingBenchmark.class.getSimpleName() + ".*")
+                .forks(1)
+                .verbosity(VerboseMode.EXTRA) //VERBOSE OUTPUT
+//                .addProfiler(LinuxPerfAsmProfiler.class)
+                .addProfiler(LinuxPerfNormProfiler.class)
+                .build();
+
+        new Runner(opt).run();
     }
 
     /*

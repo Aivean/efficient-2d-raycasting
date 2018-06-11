@@ -177,7 +177,7 @@ public class Lighting {
         return n;
     }
 
-    private static class T {
+    static class T {
         float b, i, l;
         boolean d;
 
