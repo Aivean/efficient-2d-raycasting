@@ -29,20 +29,22 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Thread)
 public class LightingBenchmark {
 
-
     @Param({/*"80", */"100"})
     int size;
 
     int[][] objects;
+    int[][] objectsSingle;
 
     Lighting l;
 
     @Setup
     public void setup() {
         objects = new int[size][size];
+        objectsSingle = new int[size][size];
         for (int x = 0; x < size; x++) {
             Arrays.fill(objects[x], 1);
         }
+        objectsSingle[size / 2][size / 2] = 1;
         l = new Lighting(size);
     }
 
@@ -51,6 +53,10 @@ public class LightingBenchmark {
         l.recalculateLighting(objects, 1F);
     }
 
+    @Benchmark
+    public void testLightingSingleLightSource() {
+        l.recalculateLighting(objectsSingle, 1F);
+    }
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()

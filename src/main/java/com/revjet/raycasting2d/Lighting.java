@@ -18,6 +18,8 @@ public class Lighting {
     private int tmpNewIntN;
     private final int raysN;
 
+    private final boolean lightPresent[];
+
     public Lighting(int size) {
         this.size = size;
         this.raysN = size * 2;
@@ -30,6 +32,8 @@ public class Lighting {
         initTArr(tmp);
         initTArr(tmp2);
         initTArr(tmpNew);
+
+        lightPresent = new boolean[size];
     }
 
     private void initTArr(T[] arr) {
@@ -45,6 +49,9 @@ public class Lighting {
         for (x = 0; x < size; x++) {
             Arrays.fill(light[x], 0);
         }
+
+        boolean firstPass = true;
+        Arrays.fill(lightPresent, false);
 
         for (int a = -raysN / 2; a < raysN / 2; a++) { // slope
             int tmpN = 0; // n of intervals
@@ -87,10 +94,11 @@ public class Lighting {
                         cutInterval(t, fe);
                     }
                 }
-                if (y < size / 2 || a % 2 == 0) {
+                if ((firstPass || lightPresent[y]) && (y < size / 2 || a % 2 == 0)) {
                     for (x = 0; x < size; x++) {
                         if (objectsY[x] == 1) { // light
                             lightY[x] += startIntensity;
+                            lightPresent[y] = true;
                             tmpNew[tmpNewIntN++].set(x, (y < size / 2 ? startIntensity : startIntensity * 2));
                         }
                     }
@@ -101,6 +109,7 @@ public class Lighting {
                 tmp2 = tmpTmp;
                 tmp2IntN = tmpN;
             }
+            firstPass = false;
         }
     }
 
