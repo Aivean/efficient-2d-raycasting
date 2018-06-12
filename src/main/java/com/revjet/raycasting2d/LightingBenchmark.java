@@ -1,7 +1,6 @@
 package com.revjet.raycasting2d;
 
 import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.profile.LinuxPerfAsmProfiler;
 import org.openjdk.jmh.profile.LinuxPerfNormProfiler;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
@@ -24,20 +23,24 @@ import java.util.concurrent.TimeUnit;
 //    jvmArgs = "-Xms2048m"
         jvmArgs = {"-Xms2048m", "-XX:+UseSuperWord", "-XX:+UnlockDiagnosticVMOptions"
 //                , "-XX:+PrintAssembly", "-XX:+PrintNMethods"
-}
+        }
 //    jvmArgs = {"-Xms2048m", "-XX:+UnlockDiagnosticVMOptions", "-XX:+TraceClassLoading", "-XX:+LogCompilation"}
 )
 @State(Scope.Thread)
 public class LightingBenchmark {
 
-    int w = 100;
-    int h = 100;
+
+    @Param({/*"80", */"100"})
+    int w;
+    int h = w;
+
     int[][] objects;
 
     Lighting l;
 
     @Setup
     public void setup() {
+        h = w;
         objects = new int[w][h];
         for (int x = 0; x < w; x++) {
             Arrays.fill(objects[x], 1);

@@ -78,7 +78,7 @@ public class Lighting {
                     int fb = (int) (t.b);
                     int fe = fb + 1;
                     lightY[fb] += applyLight(t, fb, y, td);
-                    lightY[fb] += applyLight(t, fe, y, td);
+                    lightY[fe] += applyLight(t, fe, y, td);
 
                     if (objectsY[fb] == 2) {
                         cutInterval(t, fb);
@@ -90,7 +90,7 @@ public class Lighting {
                 if (y < h / 2 || a % 2 == 0) {
                     for (x = 0; x < w; x++) {
                         if (objectsY[x] == 1) { // light
-                            lightY[x] += startIntensity;
+//                            lightY[x] += startIntensity;
 //                            tmpNew[tmpNewIntN++] = new T(x, (y < h / 2 ? startIntensity : startIntensity * 2));
                             lightY[x] += startIntensity;
 //                            tmpNew[tmpNewIntN++] = new T(x, (y < h / 2 ? startIntensity : startIntensity * 2));
