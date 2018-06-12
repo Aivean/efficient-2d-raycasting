@@ -15,8 +15,7 @@ import java.io.IOException;
 public class LightingTest {
     @Test(enabled = false)
     public void testRecalcLighting() {
-
-        Lighting l = new Lighting(3, 3);
+        Lighting l = new Lighting(3);
 
         int[][] objects = new int[][]{
                 {0, 0, 0},
@@ -26,8 +25,8 @@ public class LightingTest {
 
         l.recalculateLighting(objects, 1F / 3);
 
-        for (int y = 0; y < l.h; y++) {
-            for (int x = 0; x < l.w; x++) {
+        for (int y = 0; y < l.size; y++) {
+            for (int x = 0; x < l.size; x++) {
                 System.out.print(l.getLight(x, y));
                 System.out.print(", ");
             }
@@ -51,26 +50,25 @@ public class LightingTest {
 
     @Test
     public void testGenerateImage() throws IOException {
-        int w = 100;
-        int h = 100;
+        int size = 100;
 
-        Lighting l = new Lighting(w, h);
+        Lighting l = new Lighting(size);
 
-        int[][] objects = new int[w][h];
-        objects[0][w / 2] = 1;
-        objects[0][w / 3] = 1;
-        objects[0][w * 2 / 3] = 1;
+        int[][] objects = new int[size][size];
+        objects[0][size / 2] = 1;
+        objects[0][size / 3] = 1;
+        objects[0][size * 2 / 3] = 1;
 
-        objects[h / 2][w / 2] = 2;
-        objects[h / 2 + 1][w / 2] = 2;
-        objects[h / 2 + 2][w / 2] = 2;
+        objects[size / 2][size / 2] = 2;
+        objects[size / 2 + 1][size / 2] = 2;
+        objects[size / 2 + 2][size / 2] = 2;
 
-        l.recalculateLighting(objects, 1F / w / 10);
+        l.recalculateLighting(objects, 1F / size / 10);
 
-        BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        BufferedImage bi = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
 
-        for (int y = 0; y < l.h; y++) {
-            for (int x = 0; x < l.w; x++) {
+        for (int y = 0; y < l.size; y++) {
+            for (int x = 0; x < l.size; x++) {
                 double brightness = Math.min(1, l.getLight(x, y) * 50 + 0.01);
                 int comp = (int) (0xff * brightness);
                 int rgb = (((comp << 8) | comp) << 8) | comp;

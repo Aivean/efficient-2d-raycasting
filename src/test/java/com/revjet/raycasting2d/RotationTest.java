@@ -28,11 +28,12 @@ public class RotationTest {
 
         int[][] res = new int[size][size];
 
-        Rotation.rotateCCW(size, arg, res);
+        Rotation.rotateCCW(arg, res);
         for (int i = 0; i < size; i++) {
             Assert.assertEquals(res[i], eta[i]);
         }
     }
+
 
     @Test
     public void testRotateCW() {
@@ -44,7 +45,7 @@ public class RotationTest {
 
         int[][] res = new int[size][size];
 
-        Rotation.rotateCW(size, arg, res);
+        Rotation.rotateCW(arg, res);
         for (int i = 0; i < size; i++) {
             Assert.assertEquals(res[i], eta[i]);
         }
@@ -60,7 +61,7 @@ public class RotationTest {
 
         int[][] res = new int[size][size];
 
-        Rotation.rotate180(size, arg, res);
+        Rotation.rotate180(arg, res);
 
 
         for (int i = 0; i < size; i++) {

@@ -44,17 +44,17 @@ public class RotationBenchmark {
 
     @Benchmark
     public void testRotationCCW() {
-        Rotation.rotateCCW(size, arg, res);
+        Rotation.rotateCCW(arg, res);
     }
 
     @Benchmark
     public void testRotationCW() {
-        Rotation.rotateCW(size, arg, res);
+        Rotation.rotateCW(arg, res);
     }
 
     @Benchmark
     public void testRotation180() {
-        Rotation.rotate180(size, arg, res);
+        Rotation.rotate180(arg, res);
     }
 
 }

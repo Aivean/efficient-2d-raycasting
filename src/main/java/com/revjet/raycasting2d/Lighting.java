@@ -8,7 +8,7 @@ import java.util.Arrays;
  */
 public class Lighting {
 
-    final int w, h;
+    final int size;
     private final float[][] light;
     private T[] tmp;
     private T[] tmp2;
@@ -16,15 +16,16 @@ public class Lighting {
 
     private int tmp2IntN = 0;
     private int tmpNewIntN;
+    private final int raysN;
 
+    public Lighting(int size) {
+        this.size = size;
+        this.raysN = size * 2;
 
-    public Lighting(int w, int h) {
-        this.w = w;
-        this.h = h;
-        light = new float[w][h];
-        tmp = new T[w * 3];
-        tmp2 = new T[w * 3];
-        tmpNew = new T[w];
+        light = new float[size][size];
+        tmp = new T[size * 3];
+        tmp2 = new T[size * 3];
+        tmpNew = new T[size];
 
         initTArr(tmp);
         initTArr(tmp2);
@@ -37,15 +38,14 @@ public class Lighting {
         }
     }
 
-    void recalculateLighting(int[][] objects, float startIntensity) {
+    void recalculateLighting(final int[][] objects, final float startIntensity) {
         int x, y;
 
         /* cleaning lighting */
-        for (x = 0; x < w; x++) {
+        for (x = 0; x < size; x++) {
             Arrays.fill(light[x], 0);
         }
 
-        int raysN = w * 2;
         for (int a = -raysN / 2; a < raysN / 2; a++) { // slope
             int tmpN = 0; // n of intervals
             tmp2IntN = 0; // clear tmp2
@@ -55,7 +55,7 @@ public class Lighting {
             float slp = (float) Math.tan(alpha);
             float td = (float) Math.sqrt(slp * slp + 1);
 
-            for (y = 0; y < h; y++) {
+            for (y = 0; y < size; y++) {
                 tmpN = merge();
                 int[] objectsY = objects[y];
                 float[] lightY = light[y];
@@ -64,7 +64,7 @@ public class Lighting {
                     T t = tmp[i];
                     t.b += slp;
 
-                    if (t.b < 0 || t.b + 1 >= w || t.i <= 0.0000001) {
+                    if (t.b < 0 || t.b + 1 >= size || t.i <= 0.0000001) {
                         t.d = true;
                     }
                 }
@@ -87,14 +87,11 @@ public class Lighting {
                         cutInterval(t, fe);
                     }
                 }
-                if (y < h / 2 || a % 2 == 0) {
-                    for (x = 0; x < w; x++) {
+                if (y < size / 2 || a % 2 == 0) {
+                    for (x = 0; x < size; x++) {
                         if (objectsY[x] == 1) { // light
-//                            lightY[x] += startIntensity;
-//                            tmpNew[tmpNewIntN++] = new T(x, (y < h / 2 ? startIntensity : startIntensity * 2));
                             lightY[x] += startIntensity;
-//                            tmpNew[tmpNewIntN++] = new T(x, (y < h / 2 ? startIntensity : startIntensity * 2));
-                            tmpNew[tmpNewIntN++].set(x, (y < h / 2 ? startIntensity : startIntensity * 2));
+                            tmpNew[tmpNewIntN++].set(x, (y < size / 2 ? startIntensity : startIntensity * 2));
                         }
                     }
                 }

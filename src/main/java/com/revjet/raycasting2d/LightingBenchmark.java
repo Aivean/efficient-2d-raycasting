@@ -31,8 +31,7 @@ public class LightingBenchmark {
 
 
     @Param({/*"80", */"100"})
-    int w;
-    int h = w;
+    int size;
 
     int[][] objects;
 
@@ -40,12 +39,11 @@ public class LightingBenchmark {
 
     @Setup
     public void setup() {
-        h = w;
-        objects = new int[w][h];
-        for (int x = 0; x < w; x++) {
+        objects = new int[size][size];
+        for (int x = 0; x < size; x++) {
             Arrays.fill(objects[x], 1);
         }
-        l = new Lighting(w, h);
+        l = new Lighting(size);
     }
 
     @Benchmark
