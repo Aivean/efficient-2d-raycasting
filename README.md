@@ -56,6 +56,20 @@ Maven is used for building. Java 8 is a prerequisite.
 * Build and run tests: `./mvnw clean install assembly:single`
 * Run `Lighting` benchmarks after build: `java -jar target/raycasting-2d-java-1.0-SNAPSHOT-jar-with-dependencies.jar`
 
+Project Structure
+-----------------
+
+* [Lighting.java](src/main/java/com/aivean/raycasting2d/Lighting.java)
+    Class that implements the lighting calculation
+* [LightingBenchmark.java](src/main/java/com/aivean/raycasting2d/LightingBenchmark.java)
+    JMH benchmark for lighting
+* [Rotation.java](src/main/java/com/aivean/raycasting2d/Rotation.java)
+    Utility class for matrix rotations
+* [RotationBenchmark.java](src/main/java/com/aivean/raycasting2d/RotationBenchmark.java)
+    Rotations benchmark
+* [LightingTest.java](src/test/java/com/aivean/raycasting2d/LightingTest.java)
+    Simple unit test for lighting.
+    Additionally generates PNG with the results.
 
 Licence
 -------
