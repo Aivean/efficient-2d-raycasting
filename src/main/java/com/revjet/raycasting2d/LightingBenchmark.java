@@ -9,6 +9,7 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.VerboseMode;
 
 import java.util.Arrays;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -34,6 +35,7 @@ public class LightingBenchmark {
 
     int[][] objects;
     int[][] objectsSingle;
+    int[][] objectsHalf;
 
     Lighting l;
 
@@ -41,11 +43,28 @@ public class LightingBenchmark {
     public void setup() {
         objects = new int[size][size];
         objectsSingle = new int[size][size];
+        objectsHalf = new int[size][size];
+
         for (int x = 0; x < size; x++) {
             Arrays.fill(objects[x], 1);
         }
+
         objectsSingle[size / 2][size / 2] = 1;
         l = new Lighting(size);
+
+        Random random = new Random(13);
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+//                int r = random.nextInt(5);
+//                if (r == 0) {
+//                    objectsHalf[x][y] = 1;
+//                } else if (r == 1) {
+//                    objectsHalf[x][y] = 2;
+//                }
+                if (x < size / 2 && y < size / 2)
+                    objectsHalf[x][y] = 1;
+            }
+        }
     }
 
     @Benchmark
@@ -56,6 +75,11 @@ public class LightingBenchmark {
     @Benchmark
     public void testLightingSingleLightSource() {
         l.recalculateLighting(objectsSingle, 1F);
+    }
+
+    @Benchmark
+    public void testLightingLightHalf() {
+        l.recalculateLighting(objectsHalf, 1F);
     }
 
     public static void main(String[] args) throws RunnerException {
