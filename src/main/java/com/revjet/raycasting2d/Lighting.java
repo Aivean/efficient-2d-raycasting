@@ -8,56 +8,70 @@ import java.util.Arrays;
  */
 public class Lighting {
 
-    final int w, h;
-    final double[][] light;
-    T[] tmp;
-    T[] tmp2;
-    T[] tmpNew;
+    final int size;
+    private final float[][] light;
+    private T[] tmp;
+    private T[] tmp2;
+    private T[] tmpNew;
 
-    int tmp2IntN = 0;
+    private int tmp2IntN = 0;
     private int tmpNewIntN;
+    private final int raysN;
 
-    boolean lightPresent[];
+    private final boolean lightPresent[];
 
-    public Lighting(int w, int h) {
-        this.w = w;
-        this.h = h;
-        light = new double[w][h];
-        tmp = new T[w * 3];
-        tmp2 = new T[w * 3];
-        tmpNew = new T[w];
+    public Lighting(int size) {
+        this.size = size;
+        this.raysN = size * 2;
 
-        lightPresent = new boolean[h];
+        light = new float[size][size];
+        tmp = new T[size * 3];
+        tmp2 = new T[size * 3];
+        tmpNew = new T[size];
+
+        initTArr(tmp);
+        initTArr(tmp2);
+        initTArr(tmpNew);
+
+        lightPresent = new boolean[size];
     }
 
-    void recalculateLighting(int[][] objects, double startIntensity) {
+    private void initTArr(T[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = new T(0, 0);
+        }
+    }
+
+    void recalculateLighting(final int[][] objects, final float startIntensity) {
         int x, y;
 
         /* cleaning lighting */
-        for (x = 0; x < w; x++) {
+        for (x = 0; x < size; x++) {
             Arrays.fill(light[x], 0);
         }
+
         boolean firstPass = true;
         Arrays.fill(lightPresent, false);
 
-        int raysN = w * 2;
         for (int a = -raysN / 2; a < raysN / 2; a++) { // slope
             int tmpN = 0; // n of intervals
             tmp2IntN = 0; // clear tmp2
             tmpNewIntN = 0; // clear tmpNew
 
             double alpha = Math.PI / 4 * (2.0 * a / raysN);
-            double slp = Math.tan(alpha);
-            double td = Math.sqrt(slp * slp + 1);
+            float slp = (float) Math.tan(alpha);
+            float td = (float) Math.sqrt(slp * slp + 1);
 
-            for (y = 0; y < h; y++) {
+            for (y = 0; y < size; y++) {
                 tmpN = merge();
+                int[] objectsY = objects[y];
+                float[] lightY = light[y];
 
                 for (int i = 0; i < tmpN; i++) {
                     T t = tmp[i];
                     t.b += slp;
 
-                    if (t.b < 0 || t.b + 1 >= w || t.i <= 0.0000001) {
+                    if (t.b < 0 || t.b + 1 >= size || t.i <= 0.0000001) {
                         t.d = true;
                     }
                 }
@@ -70,21 +84,22 @@ public class Lighting {
                     if (t.d) continue;
                     int fb = (int) (t.b);
                     int fe = fb + 1;
-                    applyLight(t, fb, y, td);
-                    applyLight(t, fe, y, td);
-                    if (objects[fb][y] == 2) {
+                    lightY[fb] += applyLight(t, fb, y, td);
+                    lightY[fe] += applyLight(t, fe, y, td);
+
+                    if (objectsY[fb] == 2) {
                         cutInterval(t, fb);
                     }
-                    if (objects[fe][y] == 2) {
+                    if (objectsY[fe] == 2) {
                         cutInterval(t, fe);
                     }
                 }
-                if ((firstPass || lightPresent[y]) && (y < h / 2 || a % 2 == 0)) {
-                    for (x = 0; x < w; x++) {
-                        if (objects[x][y] == 1) { // light
-                            light[x][y] += startIntensity;
+                if ((firstPass || lightPresent[y]) && (y < size / 2 || a % 2 == 0)) {
+                    for (x = 0; x < size; x++) {
+                        if (objectsY[x] == 1) { // light
+                            lightY[x] += startIntensity;
                             lightPresent[y] = true;
-                            tmpNew[tmpNewIntN++] = new T(x, (y < h / 2 ? startIntensity : startIntensity * 2));
+                            tmpNew[tmpNewIntN++].set(x, (y < size / 2 ? startIntensity : startIntensity * 2));
                         }
                     }
                 }
@@ -98,17 +113,17 @@ public class Lighting {
         }
     }
 
-    private void applyLight(T t, int x, int y, double td) {
-        light[x][y] += max(min(t.b + t.l, x + 1) - max(t.b, x), 0) * t.i * td;
+    private float applyLight(T t, int x, int y, float td) {
+        return max(min(t.b + t.l, x + 1) - max(t.b, x), 0) * t.i * td;
     }
 
     private void cutInterval(T t, int x) {
-        double e = t.b + t.l;
+        float e = t.b + t.l;
         if (e <= x + 1 && e > x) {
             t.l = x - t.b;
         }
         if (t.b >= x && t.b < x + 1) {
-            double b = x + 1;
+            float b = x + 1;
             t.l -= b - t.b;
             t.b = b;
         }
@@ -144,17 +159,17 @@ public class Lighting {
     private int merge1(T t, int n) {
         if (n > 0) {
             T t2 = tmp[n - 1];
-            double b = min(t.b, t2.b);
-            double e = max(t.b + t.l, t2.b + t2.l);
-            double l = e - b;
+            float b = min(t.b, t2.b);
+            float e = max(t.b + t.l, t2.b + t2.l);
+            float l = e - b;
             if (l <= 1) {
                 t2.b = b;
                 t2.l = l;
                 t2.i = (t.i * t.l + t2.i * t2.l) / l;
                 return n;
-            } else if (l <= 2 && t.b - t2.b - t2.l <= 0.5) {
-                double l1 = l / 2;
-                double i = (t2.i * t2.l + t.i * t.l) / l;
+            } else if (l < 2 && t.b - t2.b - t2.l <= 0.5) {
+                float l1 = l / 2;
+                float i = (t2.i * t2.l + t.i * t.l) / l;
                 t2.b = b;
                 t2.l = l1;
                 t2.i = i;
@@ -164,30 +179,44 @@ public class Lighting {
                 t.i = i;
             }
         }
-        tmp[n++] = t;
+        tmp[n++].setFrom(t);
         return n;
     }
 
-    private static class T {
-        double b, i, l;
+    static class T {
+        float b, i, l;
         boolean d;
 
-        public T(double b, double i) {
+        public T(float b, float i) {
             this.b = b;
             this.l = 1;
             this.i = i;
         }
+
+        public void set(float b, float i) {
+            this.b = b;
+            this.l = 1;
+            this.i = i;
+            this.d = false;
+        }
+
+        public void setFrom(T other) {
+            this.b = other.b;
+            this.i = other.i;
+            this.l = other.l;
+            this.d = other.d;
+        }
     }
 
-    double getLight(int x, int y) {
+    float getLight(int x, int y) {
         return light[x][y];
     }
 
-    private static double max(double a, double b) {
+    private static float max(float a, float b) {
         return a > b ? a : b;
     }
 
-    private static double min(double a, double b) {
+    private static float min(float a, float b) {
         return a < b ? a : b;
     }
 }
