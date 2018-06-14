@@ -71,9 +71,9 @@ Project Structure
     Simple unit test for lighting.
     Additionally generates PNG with the results.
 
-Licence
+License
 -------
 
-Copyright © 2018 [Ivan Zaitsev](https://github.com/Aivean/)
+Copyright © 2018 [Ivan Zaitsev](https://github.com/Aivean/) (https://github.com/Aivean/efficient-2d-raycasting)
 
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/Aivean/efficient-2d-raycasting/blob/master/LICENSE)
