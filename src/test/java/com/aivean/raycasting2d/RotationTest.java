@@ -1,12 +1,8 @@
-package com.revjet.raycasting2d;
+package com.aivean.raycasting2d;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * @author <a href="mailto:ivan.zaytsev@webamg.com">Ivan Zaytsev</a>
- * 2018-06-11
- */
 public class RotationTest {
 
 
@@ -18,6 +14,15 @@ public class RotationTest {
 
     int size = arg.length;
 
+    private void assertRotation(Rotation rot, int[][] eta) {
+        int[][] res = new int[size][size];
+
+        rot.rotateInt(res, arg);
+        for (int i = 0; i < size; i++) {
+            Assert.assertEquals(res[i], eta[i]);
+        }
+    }
+
     @Test
     public void testRotateCCW() {
         int[][] eta = new int[][]{
@@ -26,14 +31,8 @@ public class RotationTest {
                 {0, 3, 6}
         };
 
-        int[][] res = new int[size][size];
-
-        Rotation.rotateCCW(arg, res);
-        for (int i = 0; i < size; i++) {
-            Assert.assertEquals(res[i], eta[i]);
-        }
+        assertRotation(Rotation.CCW, eta);
     }
-
 
     @Test
     public void testRotateCW() {
@@ -43,30 +42,18 @@ public class RotationTest {
                 {8, 5, 2}
         };
 
-        int[][] res = new int[size][size];
-
-        Rotation.rotateCW(arg, res);
-        for (int i = 0; i < size; i++) {
-            Assert.assertEquals(res[i], eta[i]);
-        }
+        assertRotation(Rotation.CW, eta);
     }
 
     @Test
-    public void testRotate180() {
+    public void testRotatePI() {
         int[][] eta = new int[][]{
                 {8, 7, 6},
                 {5, 4, 3},
                 {2, 1, 0}
         };
 
-        int[][] res = new int[size][size];
-
-        Rotation.rotate180(arg, res);
-
-
-        for (int i = 0; i < size; i++) {
-            Assert.assertEquals(res[i], eta[i]);
-        }
+        assertRotation(Rotation.PI, eta);
     }
 
 }

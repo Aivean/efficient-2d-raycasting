@@ -80,7 +80,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.revjet.raycasting2d.LightingBenchmark</mainClass>
+                            <mainClass>com.aivean.raycasting2d.LightingBenchmark</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
