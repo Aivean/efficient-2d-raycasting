@@ -51,7 +51,7 @@ public class LightingBenchmark {
     }
 
     @Benchmark
-    public void testLighting() {
+    public void testLightingFullyFilled() {
         l.setInputRotated(inputFullyFilled, Rotation.NO);
         l.recalculateLighting(1F);
     }
@@ -63,7 +63,7 @@ public class LightingBenchmark {
     }
 
     @Benchmark
-    public void testLightingLightHalf() {
+    public void testLightingLightQuarterFilled() {
         l.setInputRotated(objectsQuarterFilled, Rotation.NO);
         l.recalculateLighting(1F);
     }

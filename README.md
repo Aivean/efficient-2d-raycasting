@@ -48,6 +48,13 @@ Performance
 
 See [benchmarks](benchmarks.md).
 
+Building and Running
+--------------------
+
+Maven is used for building. Java 8 is a prerequisite.
+
+* Build and run tests: `./mvnw clean install assembly:single`
+* Run `Lighting` benchmarks after build: `java -jar target/raycasting-2d-java-1.0-SNAPSHOT-jar-with-dependencies.jar`
 
 
 Licence
