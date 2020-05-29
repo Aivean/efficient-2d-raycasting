@@ -1,13 +1,13 @@
 package com.aivean.raycasting2d;
 
 /**
- *  Utility class that rotates matrices
+ * Utility class that rotates matrices
  */
 public enum Rotation {
 
     NO {
         @Override
-        public void rotateInt(int[][] dst, int[][] a) {
+        public void rotate(int[][] dst, int[][] a) {
             int size = a.length;
             for (int i = 0; i < size; i++) {
                 System.arraycopy(a[i], 0, dst[i], 0, size);
@@ -15,7 +15,17 @@ public enum Rotation {
         }
 
         @Override
-        public void rotateAndAddFloat(float[][] dst, float[][] src) {
+        public void rotateAndAdd(float[][] dst, float[][] src) {
+            int size = dst.length;
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    dst[i][j] += src[i][j];
+                }
+            }
+        }
+
+        @Override
+        public void rotateAndAdd(int[][] dst, int[][] src) {
             int size = dst.length;
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
@@ -31,7 +41,7 @@ public enum Rotation {
     },
     CCW {
         @Override
-        public void rotateInt(int[][] dst, int[][] a) {
+        public void rotate(int[][] dst, int[][] a) {
             int size = a.length;
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
@@ -41,7 +51,17 @@ public enum Rotation {
         }
 
         @Override
-        public void rotateAndAddFloat(float[][] dst, float[][] src) {
+        public void rotateAndAdd(float[][] dst, float[][] src) {
+            int size = dst.length;
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    dst[i][j] += src[j][size - i - 1];
+                }
+            }
+        }
+
+        @Override
+        public void rotateAndAdd(int[][] dst, int[][] src) {
             int size = dst.length;
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
@@ -58,7 +78,7 @@ public enum Rotation {
 
     CW {
         @Override
-        public void rotateInt(int[][] dst, int[][] a) {
+        public void rotate(int[][] dst, int[][] a) {
             int size = a.length;
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
@@ -68,7 +88,17 @@ public enum Rotation {
         }
 
         @Override
-        public void rotateAndAddFloat(float[][] dst, float[][] src) {
+        public void rotateAndAdd(float[][] dst, float[][] src) {
+            int size = dst.length;
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    dst[i][j] += src[size - j - 1][i];
+                }
+            }
+        }
+
+        @Override
+        public void rotateAndAdd(int[][] dst, int[][] src) {
             int size = dst.length;
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
@@ -85,7 +115,7 @@ public enum Rotation {
 
     PI {
         @Override
-        public void rotateInt(int[][] dst, int[][] a) {
+        public void rotate(int[][] dst, int[][] a) {
             int size = a.length;
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
@@ -95,7 +125,17 @@ public enum Rotation {
         }
 
         @Override
-        public void rotateAndAddFloat(float[][] dst, float[][] src) {
+        public void rotateAndAdd(float[][] dst, float[][] src) {
+            int size = dst.length;
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    dst[i][j] += src[size - i - 1][size - j - 1];
+                }
+            }
+        }
+
+        @Override
+        public void rotateAndAdd(int[][] dst, int[][] src) {
             int size = dst.length;
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
@@ -110,9 +150,11 @@ public enum Rotation {
         }
     };
 
-    public abstract void rotateInt(int[][] dst, int[][] a);
+    public abstract void rotate(int[][] dst, int[][] a);
 
-    public abstract void rotateAndAddFloat(float[][] dst, float[][] src);
+    public abstract void rotateAndAdd(float[][] dst, float[][] src);
+
+    public abstract void rotateAndAdd(int[][] dst, int[][] src);
 
     public abstract Rotation opposite();
 

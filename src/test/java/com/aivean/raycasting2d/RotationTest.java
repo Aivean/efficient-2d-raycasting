@@ -17,7 +17,7 @@ public class RotationTest {
     private void assertRotation(Rotation rot, int[][] eta) {
         int[][] res = new int[size][size];
 
-        rot.rotateInt(res, arg);
+        rot.rotate(res, arg);
         for (int i = 0; i < size; i++) {
             Assert.assertEquals(res[i], eta[i]);
         }

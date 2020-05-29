@@ -114,11 +114,11 @@ public class Lighting {
      * @param rotation
      */
     public void setInputRotated(int[][] input, Rotation rotation) {
-        rotation.rotateInt(this.input, input);
+        rotation.rotate(this.input, input);
     }
 
     public void accumulateLightRotatated(float[][] dst, Rotation rotation) {
-        rotation.rotateAndAddFloat(dst, brightness);
+        rotation.rotateAndAdd(dst, brightness);
     }
 
     public void recalculateLighting(final float startIntensity) {

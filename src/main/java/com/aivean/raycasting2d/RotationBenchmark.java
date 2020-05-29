@@ -42,7 +42,7 @@ public class RotationBenchmark {
 
     @Benchmark
     public void benchRotation() {
-        rot.rotateInt(res, arg);
+        rot.rotate(res, arg);
     }
 
 }

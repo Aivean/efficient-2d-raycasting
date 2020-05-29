@@ -1,6 +1,7 @@
 package com.aivean.raycasting2d;
 
 import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
@@ -20,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Thread)
 public class LightingBenchmark {
 
-    @Param({/*"80", */"100"})
+    @Param({/*"80", */ /*"100",*/ /*"128",*/ "512"})
     int size;
 
     int[][] inputFullyFilled;
@@ -28,6 +29,7 @@ public class LightingBenchmark {
     int[][] objectsQuarterFilled;
 
     Lighting l;
+    LightingBits64 l64;
 
     @Setup
     public void setup() {
@@ -41,6 +43,7 @@ public class LightingBenchmark {
 
         inputSingleLight[size / 2][size / 2] = 1;
         l = new Lighting(size);
+        l64 = new LightingBits64(size, 2);
 
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
@@ -62,10 +65,27 @@ public class LightingBenchmark {
         l.recalculateLighting(1F);
     }
 
+    /* size 128:  69.773 ± 1.220  ms/op */
     @Benchmark
     public void testLightingLightQuarterFilled() {
         l.setInputRotated(objectsQuarterFilled, Rotation.NO);
         l.recalculateLighting(1F);
+    }
+
+    /* size 128, quarter: 24.071 ± 0.234 */
+    @Benchmark
+    public void testNew64LightingQuarterFilled() {
+        l64.setInputRotated(objectsQuarterFilled, Rotation.NO);
+        l64.recalculateLighting(1F);
+    }
+
+    @Benchmark
+    public void testSingleNSqrOperation(Blackhole bh) {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                bh.consume(inputFullyFilled[i][j] & objectsQuarterFilled[i][j]);
+            }
+        }
     }
 
     public static void main(String[] args) throws RunnerException {
