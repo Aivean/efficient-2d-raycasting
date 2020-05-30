@@ -14,6 +14,9 @@ import java.net.URI;
 
 public class DemoHttpServer {
 
+
+    final static int SUPERSAMPLE_FACTOR = 2;
+
     public static void main(String[] args) throws Exception {
         HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
         server.createContext("/", new StaticHandler("/static"));
@@ -29,27 +32,28 @@ public class DemoHttpServer {
 
                 String[] split = sb.toString().split(",");
 
-
                 int size = (int) (Math.round(Math.sqrt(split.length)));
 
-                LightingBits64 calc = new LightingBits64(size * 2, 2);
+                LightingBits64 calc = new LightingBits64(size * SUPERSAMPLE_FACTOR, SUPERSAMPLE_FACTOR);
 
-                int[][] input = new int[size * 2][size * 2];
+                int[][] input = new int[size * SUPERSAMPLE_FACTOR][size * SUPERSAMPLE_FACTOR];
 
-                for (int y = 0; y < size * 2; y++) {
-                    for (int x = 0; x < size * 2; x++) {
-                        String s = split[(y / 2) * size + (x / 2)];
+                for (int y = 0; y < size * SUPERSAMPLE_FACTOR; y++) {
+                    for (int x = 0; x < size * SUPERSAMPLE_FACTOR; x++) {
+                        String s = split[(y / SUPERSAMPLE_FACTOR) * size + (x / SUPERSAMPLE_FACTOR)];
                         input[y][x] = s.equals("1") ? 1 : (s.equals("2") ? 2 : 0);
                     }
                 }
 
-                long timeNS = System.nanoTime();
-                calc.setInputRotated(input, Rotation.NO);
-                calc.recalculateLighting(1f);
-                System.out.println((System.nanoTime() - timeNS) + " ns");
-
                 int[][] res = new int[size][size];
-                calc.accumulateLightRotatated(res, Rotation.NO);
+
+                long timeNS = System.nanoTime();
+                for (Rotation r : Rotation.values()) {
+                    calc.setInputRotated(input, r);
+                    calc.recalculateLighting(1f);
+                    calc.accumulateLightRotatated(res, r.opposite());
+                }
+                System.out.println((System.nanoTime() - timeNS) + " ns");
 
                 sb = new StringBuilder();
                 sb.append("[");

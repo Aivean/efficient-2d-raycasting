@@ -1,5 +1,5 @@
-var w = 80;
-var h = 80;
+var w = 128;
+var h = 128;
 
 var startIntensity = 1 / (w * 2);
 
@@ -26,6 +26,8 @@ var click;
 
 var lightHint = "";
 var fullHint = '';
+
+var redrawTimeout;
 
 /* currently rendered tiles */
 var tiles = [];
@@ -91,6 +93,7 @@ function create() {
 
 function setTile(x, y, id, brightness) {
     brightness = brightness || 0.4;
+    brightness = Math.max(Math.min(brightness, 1), 0)
     if (tiles[x][y] !== id || tileBrightness[x][y] !== brightness) {
         tiles[x][y] = id;
         tileBrightness[x][y] = brightness;
@@ -147,7 +150,8 @@ function update() {
                     }
                 }
                 if (changeFlag) {
-                    recalculateLighting(redrawTiles);
+                    if (redrawTimeout) clearTimeout(redrawTimeout);
+                    redrawTimeout = setTimeout(() => {recalculateLighting(redrawTiles)}, 20)
                     // redrawTiles();
                 }
             }
@@ -210,6 +214,15 @@ function render() {
 }
 
 function redrawTiles() {
+    var maxLight = 1
+    for (x = 0; x < w; x++) {
+        for (y = 0; y < h; y++) {
+            maxLight = Math.max(light[x][y], maxLight);
+        }
+    }
+
+    var maxLightSqrt = Math.sqrt(maxLight);
+
     for (x = 0; x < w; x++) {
         for (y = 0; y < h; y++) {
             var t;
@@ -227,7 +240,7 @@ function redrawTiles() {
             }
 
             // setTile(x, y, t, Math.min(1, Math.log(light[x][y] + 1) / 5 + 0.4));
-            setTile(x, y, t, Math.min(1, light[x][y] / 100 + 0.4));
+            setTile(x, y, t, Math.min(1, light[x][y] / maxLightSqrt) * 0.6 + 0.4);
         }
     }
 }
