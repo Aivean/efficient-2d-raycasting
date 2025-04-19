@@ -51,10 +51,11 @@ See [benchmarks](benchmarks.md).
 Building and Running
 --------------------
 
-Maven is used for building. Java 8 is a prerequisite.
+Maven is used for building. Java 17 or newer is a prerequisite.
 
-* Build and run tests: `./mvnw clean install assembly:single`
-* Run `Lighting` benchmarks after build: `java -jar target/raycasting-2d-java-1.0-SNAPSHOT-jar-with-dependencies.jar`
+* Build and run tests: `./mvnw clean install`
+* Run benchmarks after build: `java -jar target/benchmarks.jar`
+* For specific benchmarks: `java -jar target/benchmarks.jar [benchmark class name]` (e.g., `java -jar target/benchmarks.jar LightingBenchmark`)
 
 Project Structure
 -----------------

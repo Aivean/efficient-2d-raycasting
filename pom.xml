@@ -11,32 +11,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <capsule.maven.plugin.version>1.5.1</capsule.maven.plugin.version>
-        <kotlin.version>1.2.21</kotlin.version>
-        <jmh.version>1.14</jmh.version>
-        <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
-        <nd4j.version>0.9.1</nd4j.version>
-        <nd4j.backend>nd4j-native-platform</nd4j.backend>
-        <dl4j.version>0.9.1</dl4j.version>
-        <dl4j.spark.version>0.9.1_spark_2</dl4j.spark.version>
-        <spark.version>2.2.0</spark.version>
-        <scala.binary.version>2.11</scala.binary.version>
-        <datavec.version>0.9.1</datavec.version>
-        <dotenv.version>0.1.1</dotenv.version>
-        <vertx.version>3.2.1</vertx.version>
-        <vertx.completable.future.version>0.1.1</vertx.completable.future.version>
-        <dropwizard.metrics.version>3.2.2</dropwizard.metrics.version>
-        <prometheus.client.version>0.0.21</prometheus.client.version>
-        <guice.version>3.0</guice.version>
-        <args4j.version>2.33</args4j.version>
-        <slf4j.version>1.7.16</slf4j.version>
-        <logback.version>1.2.2</logback.version>
-        <logback.logstash.encoder.version>4.9</logback.logstash.encoder.version>
-        <testng.version>6.9.10</testng.version>
-        <assertj.version>3.3.0</assertj.version>
-        <kotlin.mockito.version>1.5.0</kotlin.mockito.version>
-        <netty.version>4.0.42.Final</netty.version>
-        <com.amazon.aws.sdk.version>1.11.208</com.amazon.aws.sdk.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <jmh.version>1.37</jmh.version>
+        <testng.version>7.8.0</testng.version>
     </properties>
 
     <dependencies>
@@ -54,13 +32,13 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>6.13.1</version>
+            <version>${testng.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.openjdk.jol</groupId>
             <artifactId>jol-core</artifactId>
-            <version>RELEASE</version>
+            <version>0.17</version>
         </dependency>
     </dependencies>
 
@@ -69,14 +47,22 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.5.1</version>
+                <version>3.11.0</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.openjdk.jmh</groupId>
+                            <artifactId>jmh-generator-annprocess</artifactId>
+                            <version>${jmh.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.6.0</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -87,6 +73,38 @@
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.4.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>benchmarks</finalName>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>org.openjdk.jmh.Main</mainClass>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            </transformers>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
